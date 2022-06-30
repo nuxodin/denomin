@@ -1,2 +1,2 @@
 # denomin
-Webserver administration using deno
+Server administration using deno
