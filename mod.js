@@ -1,30 +1,28 @@
 import { Application, Router } from 'https://deno.land/x/oak/mod.ts';
-
-import {dump} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@1.2.1/mod.min.js';
-
+//import {dump} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@1.2.1/mod.min.js';
+import * as system from './system.js';
+import * as my from './my.js';
 
 const port = 8761;
-
 const app = new Application();
-
 const router = new Router();
 
 router.get('/', async (ctx) => {
 
+    const free = await system.physicalMemoryFree();
+    const available = await system.physicalMemoryTotal();
+    const memoryHtml = `
+    Memory: <small>${available - free} / ${available}</small>
+    <progress value="${available - free}" max="${available}"></progress>
+    `;
 
-    //const cmd = ["echo", "hello"];
-    const cmd = ["cmd", "/c", "echo hello"];
-    const p = Deno.run({ cmd });
-    await p.status();
+    let bootedAt = await my.run(["cmd", "/c", "wmic os get lastbootuptime"]);
+    bootedAt = my.yyyymmddhhmmssToDate( bootedAt.split("\r\n")[1].trim() );
 
-    const { code } = await p.status();
-    const rawOutput = await p.output();
-    const rawError = await p.stderrOutput();
+    let systemTime = await my.run(["cmd", "/c", "wmic os get LocalDateTime"]);
+    systemTime = my.yyyymmddhhmmssToDate( systemTime.split("\r\n")[1].trim() );
 
-// wmic ComputerSystem get TotalPhysicalMemory
-// wmic OS get FreePhysicalMemory
-
-
+    ctx.response.type = 'html';
     ctx.response.body = `<!DOCTYPE html>
         <html lang=en>
             <head>
@@ -33,23 +31,60 @@ router.get('/', async (ctx) => {
                 <title>Server-Admin - Denomin</title><head>
                 <script type=module src="https://cdn.jsdelivr.net/gh/u1ui/u1/auto.min.js"></script>
             <body>
-            test
+
+            Last boot:
+            <span>
+                <u1-time datetime="${bootedAt.toISOString()}" hour minute></u1-time>
+                <u1-tooltip>
+                    <u1-time datetime="${bootedAt.toISOString()}" hour minute type=date></u1-time>
+                </u1-tooltip>
+            </span>
+
+            <br>
+            System time: <u1-time type=date datetime="${bootedAt.toISOString()}" hour minute></u1-time><br>
+            ${memoryHtml}
         `;
-    ctx.response.body = dump({
-        code,
-        rawOutput,
-        rawError,
-    });
 });
 
+
+router.get('/files', async (ctx) => {
+
+
+
+    async function printFilesNames(dir) {
+        const names = [];
+        for await (const dirEntry of Deno.readDir(dir)) {
+            names.push(dirEntry.name);
+        }
+        return names;
+    }
+    const names = await printFilesNames('/');
+
+    ctx.response.type = 'html';
+    ctx.response.body = `<!DOCTYPE html>
+        <html lang=en>
+            <head>
+                <meta charset=utf-8>
+                <meta name=viewport content="width=device-width">
+                <title>Server-Admin - Denomin</title><head>
+                <script type=module src="https://cdn.jsdelivr.net/gh/u1ui/u1@3.0.4/auto.min.js"></script>
+            <body>
+            <u1-tree1>
+                Files
+                ${names.map(name=>`<u1-tree1>${name}</u1-tree1>`).join('')}
+            </u1-tree1>
+        `;
+});
+
+
 app.use(router.routes());
-
-
-
 app.use(router.allowedMethods());
+
+
+
+
 
 app.addEventListener('listen', () => {
   console.log(`Listening on localhost:${port}`);
 });
-
 await app.listen({ port });
