@@ -52,22 +52,22 @@ router.get('/', async (ctx) => {
 });
 
 
+// save api
+router.post('/file/:file(.*)', async (ctx, next) => {
+    const file = ctx.params.file;
+    if (ctx.request.method === 'POST') {
+        const data = ctx.request.body();
+        const obj = await data.value;
+        await Deno.writeTextFile(file, obj.content);
+        ctx.response.body = {};
+    }
+});
+// show edit
 router.get('/file/:file(.*)', async (ctx, next) => {
     const file = ctx.params.file;
     const line = ctx.request.url.searchParams.get('line');
     const col = ctx.request.url.searchParams.get('col');
 
-    if (ctx.request.method === 'POST') {
-        const data = await ctx.request.body();
-        console.log(data);
-        ctx.response.body = {
-            file,
-        };
-        return;
-        // const text = form.get('text');
-        // await my.writeFile(file, text);
-        // ctx.response.redirect(ctx.request.url);
-    }
 
     const version = '5.65.5';
     const url = `https://cdn.jsdelivr.net/npm/codemirror@${version}`;
@@ -80,6 +80,7 @@ router.get('/file/:file(.*)', async (ctx, next) => {
     mime = mime.replace('application/x-javascript', 'text/javascript');
 
     const content = await Deno.readTextFile(file);
+
 
     ctx.response.body = `${my.htmlHeader}
         <link rel="stylesheet" href="${url}/lib/codemirror.${min}css">
@@ -129,22 +130,35 @@ router.get('/file/:file(.*)', async (ctx, next) => {
           background-position: bottom left;
           background-repeat: repeat-x;
         }
+
+        /* new */
+        .CodeMirror {
+            line-height:normal;
+            font-size:12px;
+            scroll-behavior: auto;
+        }
+        .CodeMirror * {
+            line-height:normal;
+            scroll-behavior: auto;
+        }
+
         </style>
         <body style="padding:0">
             <button
 			class=q1Rst
 			id=saveButton
 			style="position:fixed;
-					right:-1px;
+					right:0;
 					top:10px;
+                    width:auto;
 					z-index:10;
 					padding:10px 12px;
 					display:none;
 					background-image: linear-gradient(rgba(255,255,255,.5),rgba(205,205,205,.5));">
-			< ?=is_writable($file)?'save':'rechte zum speichern fehlen!'? >
+            ${1?'save':'rechte zum speichern fehlen!'}
 		</button>
 		<div style="height:100%; width:100%">
-			<textarea id=editor name="textareaContentCanBeCachedOnReload<?=rand()?>" mime="${mime}" line="${line??''}" col="${col??''}" style="width:100%; height:100%;">${content}</textarea>
+			<textarea id=editor name="textareaContentCanBeCachedOnReload${Math.random()}" mime="${mime}" line="${line??''}" col="${col??''}" style="width:100%; height:100%;">${my.htmlEscape(content)}</textarea>
 		</div>
 
 
@@ -172,15 +186,10 @@ router.get('/file/:file(.*)', async (ctx, next) => {
         async function saveFile(content){
             btn.style.backgroundColor = '#fea';
             const res = await postData(location.href, {content});
-            console.log(res);
-            // Ask({save: content},{
-            //     onComplete: function(asw){
-            //         if (asw) {
-            //             btn.style.backgroundColor = '';
-            //             btn.style.display = 'none';
-            //         }
-            //     }
-            // });
+            if ('todo') {
+                btn.style.backgroundColor = '';
+                btn.style.display = 'none';
+            }
         };
 
         btn.addEventListener('click',()=>{
@@ -286,7 +295,7 @@ app.use(async (ctx, next) => {
 });
 
 app.use(router.routes());
-app.use(router.allowedMethods());
+//app.use(router.allowedMethods());
 
 
 
