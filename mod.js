@@ -155,7 +155,7 @@ router.get('/file/:file(.*)', async (ctx, next) => {
 					padding:10px 12px;
 					display:none;
 					background-image: linear-gradient(rgba(255,255,255,.5),rgba(205,205,205,.5));">
-            ${1?'save':'rechte zum speichern fehlen!'}
+            ${true?'save':'rechte zum speichern fehlen!'}
 		</button>
 		<div style="height:100%; width:100%">
 			<textarea id=editor name="textareaContentCanBeCachedOnReload${Math.random()}" mime="${mime}" line="${line??''}" col="${col??''}" style="width:100%; height:100%;">${my.htmlEscape(content)}</textarea>
