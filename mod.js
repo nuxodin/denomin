@@ -227,7 +227,6 @@ router.get('/file/:file(.*)', async (ctx, next) => {
             }, 200);
         }
         </script>
-
         `;
 
     await next();

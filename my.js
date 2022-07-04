@@ -29,7 +29,7 @@ export const htmlHeader = `<!DOCTYPE html>
         <meta charset=utf-8>
         <meta name=viewport content="width=device-width">
         <title>Server-Admin - Denomin</title><head>
-        <script type=module src="https://cdn.jsdelivr.net/gh/u1ui/u1@3.0.7/auto.min.js"></script>
+        <script type=module src="https://cdn.jsdelivr.net/gh/u1ui/u1@3.0.8/auto.min.js"></script>
         <style>
         input, textarea, select, button {
             width:100%;
