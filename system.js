@@ -6,6 +6,9 @@ import * as my from './my.js';
 // # vmstat
 // # free
 
+
+
+
 export async function physicalMemoryFree(){
     const val = await my.run(["cmd", "/c", "wmic OS get FreePhysicalMemory"]);
     return val.split("\r\n")[1].trim();
@@ -23,5 +26,10 @@ export async function bootTime(){
 }
 export async function systemTime(){
     const val = await my.run(["cmd", "/c", "wmic os get LocalDateTime"]);
+    // system time for linux
+    //const valLinux = await my.run(["cmd", "/c", "date"]);
+
+
+
     return my.yyyymmddhhmmssToDate( val.split("\r\n")[1].trim() );
 }
