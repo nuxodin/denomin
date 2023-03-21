@@ -330,26 +330,19 @@ router.get('/domain', async (ctx) => {
     ctx.response.body = `${my.htmlHeader}
             <body>
             <div u1-focusgroup>
-                <button style="width:auto">
-                    <u1-ico icon=add></u1-ico>
-                    Add Domain
-                </button>
 
                 <u1-splitbutton>
                     <button style="width:auto">
-                        <u1-ico icon=add></u1-ico>
-                        Add Domain
+                        <u1-ico>add</u1-ico>
                     </button>
                     <menu>
-                        <li><button>Subdomain</button>
+                        <li><button>Domain</button>
                         <li><button>Subdomain</button>
                         <li><button>Alias Domain</button>
                     </menu>
                 </u1-splitbutton>
 
 
-                <button style="width:auto">Add Subdomain</button>
-                <button style="width:auto">Add Domain Alias</button>
                 &nbsp;
                 <button style="width:auto">remove</button>
             </div>
