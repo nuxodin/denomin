@@ -8,7 +8,37 @@ import { typeByExtension } from "https://deno.land/std@0.145.0/media_types/mod.t
 const port = 8761;
 const app = new Application();
 const router = new Router();
-const session = new Session()
+const session = new Session();
+
+
+// drivers/sql/MysqlDb.js";
+import { MysqlDb } from "../item.js/drivers/sql/MysqlDb.js";
+import { resolveAll } from "../item.js/tools/AsyncItem.js";
+
+const db = new MysqlDb();
+await db.connect({host: 'localhost', db:'denomin'});
+
+db.setSchema({
+    properties: {
+        domain: {
+            properties: {
+                id:     {type: 'integer', x_autoincrement: true},
+                domain: {type: 'string', maxLength: 255},
+                path:   {type: 'string', maxLength: 1000},
+                ip:     {type: 'string', maxLength: 15, oneOf: [{format: 'ipv4'}, {format: 'ipv6'}]},
+                size:   {type: 'number'},
+                status: {type: 'string', maxLength: 20, enum: ['active', 'inactive']},
+                type:   {type: 'string', maxLength: 20, enum: ['domain', 'subdomain', 'alias']},
+                created: {type: 'string', format: 'date-time'},
+            },
+            required: ['domain', 'path', 'size', 'type'],
+        }
+    },
+});
+
+
+
+
 
 app.use(session.initMiddleware());
 
@@ -32,10 +62,16 @@ router.get('/', async (ctx) => {
     const bootedAt = await system.bootTime();
     const systemTime = await system.systemTime();
 
-
     ctx.response.type = 'html';
     ctx.response.body = `${my.htmlHeader}
             <body>
+
+            <nav>
+                <ul>
+                    <li><a href=/file>Files</a></li>
+                    <li><a href=/domain>Domains</a></li>
+                </ul>
+            </nav>
 
             Last boot:
             <span>
@@ -62,6 +98,7 @@ router.post('/file/:file(.*)', async (ctx, next) => {
         ctx.response.body = {};
     }
 });
+
 // show edit
 router.get('/file/:file(.*)', async (ctx, next) => {
     const file = ctx.params.file;
@@ -80,7 +117,6 @@ router.get('/file/:file(.*)', async (ctx, next) => {
     mime = mime.replace('application/x-javascript', 'text/javascript');
 
     const content = await Deno.readTextFile(file);
-
 
     ctx.response.body = `${my.htmlHeader}
         <link rel="stylesheet" href="${url}/lib/codemirror.${min}css">
@@ -243,7 +279,7 @@ router.get('/file/:file(.*)', async (ctx, next) => {
 
 
 
-router.get('/files', async (ctx) => {
+router.get('/file', async (ctx) => {
     const items = await my.listDir('/');
 
     ctx.response.type = 'html';
@@ -267,9 +303,12 @@ router.get('/files', async (ctx) => {
                             html +=
                             '<u1-tree1 '+attr+' name="'+item.name+'">'+
                                 '<span slot=icon>'+icon+'</span>'+
-                                '<a href="/file/'+encPath+'/'+encodeURI(item.name)+'">'+
-                                    item.name+
-                                '</a>'+
+                                (item.type==='file'
+                                    ?   '<a href="/file/'+encPath+'/'+encodeURI(item.name)+'">'+
+                                            item.name+
+                                        '</a>'
+                                    :    item.name
+                                ) +
                             '</u1-tree1>';
                         });
                         tree.innerHTML += html;
@@ -280,7 +319,110 @@ router.get('/files', async (ctx) => {
             </script>
         `;
 });
-//router.get('/api/:x(.*)', (ctx, next) => {
+
+
+
+router.get('/domain', async (ctx) => {
+    const table = db.item('domain');
+    await table.loadAll();
+    const all = await resolveAll(table);
+    ctx.response.type = 'html';
+    ctx.response.body = `${my.htmlHeader}
+            <body>
+            <div u1-focusgroup>
+                <button style="width:auto">
+                    <u1-ico icon=add></u1-ico>
+                    Add Domain
+                </button>
+
+                <u1-splitbutton>
+                    <button style="width:auto">
+                        <u1-ico icon=add></u1-ico>
+                        Add Domain
+                    </button>
+                    <menu>
+                        <li><button>Subdomain</button>
+                        <li><button>Subdomain</button>
+                        <li><button>Alias Domain</button>
+                    </menu>
+                </u1-splitbutton>
+
+
+                <button style="width:auto">Add Subdomain</button>
+                <button style="width:auto">Add Domain Alias</button>
+                &nbsp;
+                <button style="width:auto">remove</button>
+            </div>
+
+            <u1-table sortable>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:2rem">
+                            <th>ID
+                            <th>Domain
+                            <th>IP
+                            <th>Type
+                            <th>Status
+                            <th>Created
+                            <th>Size
+                    <tbody>
+                        ${Object.values(all).map(item=>`
+                            <tr>
+                                <td><input type=checkbox>
+                                <td>${item.id}
+                                <td u1-href="/domain/${item.id}"><a href="/domain/${item.id}">${item.domain}</a>
+                                <td>${item.ip}
+                                <td>${item.type}
+                                <td>${item.status}
+                                <td>${item.created}
+                                <td>${item.size}
+                        `).join('')}
+                </table>
+            </u1-table>
+        `;
+});
+
+router.get('/domain/:id', async (ctx) => {
+    const id = ctx.params.id;
+    const Row = db.item('domain').item(id);
+    await Row.loadItems();
+    const row = await resolveAll(Row);
+    ctx.response.type = 'html';
+    ctx.response.body = `${my.htmlHeader}
+            <body>
+
+            <u1-tabs>
+                <h2>Overview</h2>
+                <div>
+                    <table>
+                        <tr><td>ID<td>${row.id}
+                        <tr><td>Domain<td>${row.domain}
+                        <tr><td>IP<td>${row.ip}
+                        <tr><td>Type<td>${row.type}
+                        <tr><td>Status<td>${row.status}
+                        <tr><td>Created<td>${row.created}
+                        <tr><td>Size<td>${row.size}
+
+                    </table>
+                </div>
+                <h2>Files</h2>
+                <div>
+                </div>
+                <h2>Databases</h2>
+                <div>
+                </div>
+                <h2>DNS</h2>
+                <div>
+                </div>
+                <h2>Settings</h2>
+                <div>
+                </div>
+            </u1-tabs>
+        `;
+});
+
+
 
 
 // serve directory listing

@@ -29,12 +29,24 @@ export const htmlHeader = `<!DOCTYPE html>
         <meta charset=utf-8>
         <meta name=viewport content="width=device-width">
         <title>Server-Admin - Denomin</title><head>
-        <script type=module src="https://cdn.jsdelivr.net/gh/u1ui/u1@3.6.3/auto.min.js"></script>
+        <script type=module src="https://cdn.jsdelivr.net/gh/u1ui/u1@x/auto.min.js"></script>
         <style>
+        html {
+            --hsl-h: 187;
+            --hsl-s: 116%;
+            --hsl-l: 34%;
+            --u1-ico-dir:"https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/outline.svg";
+        }
+        button > u1-ico {
+            font-size:1.5em;
+            margin: -.5em 0;
+            vertical-align:-17%;
+        }
+        button > u1-ico:first-child {
+            margin-left: 0;
+        }
         input, textarea, select, button {
             width:100%;
-            margin-top:.2rem;
-            margin-bottom:.2rem;
         }
         body {
             padding:1vw;
