@@ -29,7 +29,7 @@ export const htmlHeader = `<!DOCTYPE html>
         <meta charset=utf-8>
         <meta name=viewport content="width=device-width">
         <title>Server-Admin - Denomin</title><head>
-        <script type=module src="https://cdn.jsdelivr.net/gh/u1ui/u1@latest/auto.min.js"></script>
+        <script type=module src="https://cdn.jsdelivr.net/gh/u1ui/u1@x.x/auto.min.js"></script>
         <style>
         html {
             --hsl-h: 187;
