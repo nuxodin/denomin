@@ -1,5 +1,5 @@
 import { Application, Router } from 'https://deno.land/x/oak/mod.ts';
-//import {dump} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@1.2.1/mod.min.js';
+//import {dump} from 'https://cdn.jsdelivr.net/gh/nuxodin/dump.js@1.2.2/mod.min.js';
 import * as my from './my.js';
 import * as system from './system.js';
 import { Session } from "https://deno.land/x/oak_sessions/mod.ts"
@@ -342,7 +342,6 @@ router.get('/domain', async (ctx) => {
                     </menu>
                 </u1-splitbutton>
 
-
                 &nbsp;
                 <button style="width:auto">remove</button>
             </div>
@@ -400,17 +399,13 @@ router.get('/domain/:id', async (ctx) => {
                     </table>
                 </div>
                 <h2>Files</h2>
-                <div>
-                </div>
+                <div></div>
                 <h2>Databases</h2>
-                <div>
-                </div>
+                <div></div>
                 <h2>DNS</h2>
-                <div>
-                </div>
+                <div></div>
                 <h2>Settings</h2>
-                <div>
-                </div>
+                <div></div>
             </u1-tabs>
         `;
 });
