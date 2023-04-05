@@ -39,27 +39,24 @@ await db.connect({
     password:'abc',
 });
 
-try {
-    db.setSchema({
-        properties: {
-            domain: {
-                properties: {
-                    id:     {type: 'integer', x_autoincrement: true},
-                    domain: {type: 'string', maxLength: 255},
-                    path:   {type: 'string', maxLength: 1000},
-                    ip:     {type: 'string', maxLength: 15, oneOf: [{format: 'ipv4'}, {format: 'ipv6'}]},
-                    size:   {type: 'number'},
-                    status: {type: 'string', maxLength: 20, enum: ['active', 'inactive']},
-                    type:   {type: 'string', maxLength: 20, enum: ['domain', 'subdomain', 'alias']},
-                    created: {type: 'string', format: 'date-time'},
-                },
-                required: ['domain', 'path', 'size', 'type'],
-            }
-        },
-    });
-} catch (e) {
-    console.log(e);
-}
+
+// db.setSchema({
+//     properties: {
+//         domain: {
+//             properties: {
+//                 id:     {type: 'integer', x_autoincrement: true},
+//                 domain: {type: 'string', maxLength: 255},
+//                 path:   {type: 'string', maxLength: 1000},
+//                 ip:     {type: 'string', maxLength: 15, oneOf: [{format: 'ipv4'}, {format: 'ipv6'}]},
+//                 size:   {type: 'number'},
+//                 status: {type: 'string', maxLength: 20, enum: ['active', 'inactive']},
+//                 type:   {type: 'string', maxLength: 20, enum: ['domain', 'subdomain', 'alias']},
+//                 created: {type: 'string', format: 'date-time'},
+//             },
+//             required: ['domain', 'path', 'size', 'type'],
+//         }
+//     },
+// });
 
 
 
