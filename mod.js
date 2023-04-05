@@ -18,7 +18,7 @@ import { resolveAll } from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@0.2.2/to
 
 
 
-import $ from 'https://deno.land/x/dax@0.30.1/mod.ts';
+import $ from 'https://deno.land/x/dax@0.30.0/mod.ts';
 
 try {
     let x = await $`mysql --version`.text();
