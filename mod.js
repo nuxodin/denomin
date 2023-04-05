@@ -11,52 +11,51 @@ const router = new Router();
 const session = new Session();
 
 
-//import { MysqlDb } from "../item.js/drivers/sql/MysqlDb.js";
-//import { resolveAll } from "../item.js/tools/AsyncItem.js";
-import { MysqlDb } from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@0.2.4/drivers/sql/MysqlDb.js';
-import { resolveAll } from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@0.2.4/tools/AsyncItem.js';
-
-
+import { Mysql } from "../item.js/drivers/sql/MysqlDb.js";
+import { resolveAll } from "../item.js/tools/AsyncItem.js";
+//import { Mysql } from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@0.2.4/drivers/sql/MysqlDb.js';
+//import { resolveAll } from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@0.2.4/tools/AsyncItem.js';
 import $ from 'https://deno.land/x/dax@0.30.1/mod.ts';
 
-try {
-    let x = await $`mysql --version`.text();
-    console.log(x);
-} catch {
+
+/*
+await $`mysql --version`.text().catch(async () => {
     console.log('sudo yum install -y mariadb-server');
     //await $`sudo apt-get install mysql-server`;
     await $`sudo yum install -y mariadb-server`;
     await $`sudo mysql_secure_installation`;
-}
-
-
-
-const db = new MysqlDb();
-await db.connect({
-    host: 'localhost',
-    db:'denominx',
-    username:'root',
-    password:'abc',
+}).catch(() => {
+    console.log('could not install mysql');
 });
+*/
 
 
-// db.setSchema({
-//     properties: {
-//         domain: {
-//             properties: {
-//                 id:     {type: 'integer', x_autoincrement: true},
-//                 domain: {type: 'string', maxLength: 255},
-//                 path:   {type: 'string', maxLength: 1000},
-//                 ip:     {type: 'string', maxLength: 15, oneOf: [{format: 'ipv4'}, {format: 'ipv6'}]},
-//                 size:   {type: 'number'},
-//                 status: {type: 'string', maxLength: 20, enum: ['active', 'inactive']},
-//                 type:   {type: 'string', maxLength: 20, enum: ['domain', 'subdomain', 'alias']},
-//                 created: {type: 'string', format: 'date-time'},
-//             },
-//             required: ['domain', 'path', 'size', 'type'],
-//         }
-//     },
-// });
+const db = new Mysql({
+    host: 'localhost',
+    username:'root',
+    //password:'abc',
+}).item('denomin_xxx');
+
+await db.connect();
+
+
+db.setSchema({
+    properties: {
+        domain: {
+            properties: {
+                id:     {type: 'integer', x_autoincrement: true},
+                domain: {type: 'string', maxLength: 255},
+                path:   {type: 'string', maxLength: 1000},
+                ip:     {type: 'string', maxLength: 15, oneOf: [{format: 'ipv4'}, {format: 'ipv6'}]},
+                size:   {type: 'number'},
+                status: {type: 'string', maxLength: 20, enum: ['active', 'inactive']},
+                type:   {type: 'string', maxLength: 20, enum: ['domain', 'subdomain', 'alias']},
+                created: {type: 'string', format: 'date-time'},
+            },
+            required: ['domain', 'path', 'size', 'type'],
+        }
+    },
+});
 
 
 
