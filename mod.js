@@ -33,7 +33,12 @@ try {
 
 
 const db = new MysqlDb();
-await db.connect({host: 'localhost', db:'denomin'});
+await db.connect({
+    host: 'localhost',
+    db:'denomin',
+    username:'root',
+    password:'abc',
+});
 
 db.setSchema({
     properties: {
