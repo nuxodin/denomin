@@ -34,7 +34,7 @@ try {
 const db = new MysqlDb();
 await db.connect({
     host: 'localhost',
-    db:'denomin',
+    db:'denominx',
     username:'root',
     password:'abc',
 });
