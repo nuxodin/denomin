@@ -13,7 +13,7 @@ const session = new Session();
 
 //import { MysqlDb } from "../item.js/drivers/sql/MysqlDb.js";
 //import { resolveAll } from "../item.js/tools/AsyncItem.js";
-import { MysqlDB } from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@0.2.2/drivers/sql/MysqlDb.js';
+import { MysqlDb } from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@0.2.2/drivers/sql/MysqlDb.js';
 import { resolveAll } from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@0.2.2/tools/AsyncItem.js';
 
 const db = new MysqlDb();
