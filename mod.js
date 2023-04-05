@@ -13,9 +13,8 @@ const session = new Session();
 
 //import { MysqlDb } from "../item.js/drivers/sql/MysqlDb.js";
 //import { resolveAll } from "../item.js/tools/AsyncItem.js";
-import { MysqlDb } from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@0.2.3/drivers/sql/MysqlDb.js';
-import { resolveAll } from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@0.2.3/tools/AsyncItem.js';
-
+import { MysqlDb } from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@0.2.4/drivers/sql/MysqlDb.js';
+import { resolveAll } from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@0.2.4/tools/AsyncItem.js';
 
 
 import $ from 'https://deno.land/x/dax@0.30.1/mod.ts';
