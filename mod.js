@@ -18,15 +18,15 @@ import { resolveAll } from 'https://cdn.jsdelivr.net/gh/nuxodin/item.js@0.2.2/to
 
 
 
-import $ from 'https://deno.land/x/dax@0.30.0/mod.ts';
+import $ from 'https://deno.land/x/dax@0.30.1/mod.ts';
 
 try {
     let x = await $`mysql --version`.text();
     console.log(x);
 } catch {
-    console.log('sudo yum install mariadb-server');
+    console.log('sudo yum install -y mariadb-server');
     //await $`sudo apt-get install mysql-server`;
-    await $`sudo yum install mariadb-server`;
+    await $`sudo yum install -y mariadb-server`;
     await $`sudo mysql_secure_installation`;
 }
 
