@@ -29,20 +29,21 @@ export const htmlHeader = `<!DOCTYPE html>
         <meta charset=utf-8>
         <meta name=viewport content="width=device-width">
         <title>Server-Admin - Denomin</title><head>
-        <script type=module src="https://cdn.jsdelivr.net/gh/u1ui/u1@x.x/auto.min.js"></script>
+        <!--script type=module src="https://cdn.jsdelivr.net/gh/u2ui/u2@x.x/u2/auto.js"></script-->
+        <script type=module src="https://cdn.jsdelivr.net/gh/u2ui/u2@main/u2/auto.js"></script>
         <style>
         html {
             --hsl-h: 187;
             --hsl-s: 116%;
             --hsl-l: 34%;
-            --u1-ico-dir:"https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/outline.svg";
+            --u2-ico-dir:"https://cdn.jsdelivr.net/npm/@material-icons/svg@1.0.11/svg/{icon}/outline.svg";
         }
-        button > u1-ico {
+        button > u2-ico {
             font-size:1.5em;
             margin: -.5em 0;
             vertical-align:-17%;
         }
-        button > u1-ico:first-child {
+        button > u2-ico:first-child {
             margin-left: 0;
         }
         input, textarea, select, button {
@@ -60,7 +61,7 @@ import { verify } from "https://deno.land/x/scrypt/mod.ts";
 export async function showLogin(ctx){
     let msg = '';
     if (ctx.request.method === 'POST') {
-        const form = await ctx.request.body({type: 'form'}).value
+        const form = await ctx.request.body.formData();
         // how to login as linux user and save in session?
         const pw = form.get('password');
         const tmpTobiHash = 'c2NyeXB0AA4AAAAIAAAAAUNqPIdUjYULJWbb4dx9QTj4kaV7dh+wN602yfpDMwmPfSfOMArIvsU5ngL+ahqjJQvVbBJqwmZwP5/fzq+sR6rrhHtnWkm1PHG1dOV5JdJT';
