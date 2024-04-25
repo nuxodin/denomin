@@ -387,7 +387,7 @@ router.get('/domain', async (ctx) => {
                             <th>Created
                             <th>Size
                     <tbody>
-                        ${Object.values(all||{}).map(item=>`
+                        ${Object.values(all).map(item=>`
                             <tr>
                                 <td><input type=checkbox>
                                 <td>${item.id}
